@@ -69,5 +69,53 @@ public class Traverse {
     v45.neighbors = new ArrayList<>(List.of(v23));
     v23.neighbors = new ArrayList<>(List.of());
     v67.neighbors = new ArrayList<>(List.of(v91));
+
+    //printGossipers(grace);
+    System.out.println(minReachable(graph, 78));
+  }
+
+  public static int minReachable(Map<Integer, Set<Integer>> graph, int start){
+    // Set<Integer> visited = new HashSet<>();
+    //create the hashset in the return statement to be more consice
+    if(graph == null) throw new NullPointerException("cannot find min of missing graph");
+    return minReachable(graph, start, new HashSet<>());
+
+  }
+
+  //make recursive method private . 
+  private static int minReachable(Map<Integer, Set<Integer>> graph, int current, Set<Integer> visited){
+   // if( graph == null) return Integer.MAX_VALUE; //alternativly, throw new exception
+   //but instead we checked this in the begining in the public class
+   if(visited.contains(current)) return Integer.MAX_VALUE;
+   visited.add(current);
+
+   int min = current;
+
+   //current is key , neighbors is all values
+   for(int neighbor : graph.get(current)){
+    int minFromNeighbor = minReachable(graph, neighbor, visited);
+    if(minFromNeighbor < min) min = minFromNeighbor;
+   }
+
+    return min; 
+
+  }
+
+  public static void printGossipers(Person initial){
+    Set<Person> visited = new HashSet<>();
+    printGossipers(initial, visited);
+
+  }
+  private static void printGossipers(Person current, Set<Person> visited){
+    if(current == null || visited.contains(current)) return;
+    visited.add(current);
+    System.out.println(current.getName());
+
+    //explore all confidants
+    for(Person confidants : current.getConfidants()){
+      printGossipers(confidants, visited);
+    
+
+    }
   }
 }
